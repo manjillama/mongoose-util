@@ -1,0 +1,33 @@
+{
+  "name": "@manjiltamang/mongoose-util",
+  "version": "1.0.0-beta.0",
+  "description": "Easy lightweight mongoose utilities packages for faster prototyping",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manjillama/mongoose-util.git"
+  },
+  "keywords": [
+    "mongoose",
+    "mongodb",
+    "nodejs",
+    "utilities"
+  ],
+  "author": "Manjil Tamang <lamamanjil@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manjillama/mongoose-util/issues"
+  },
+  "homepage": "https://github.com/manjillama/mongoose-util#readme",
+  "peerDependencies": {},
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "mongoose": "^5.13.5"
+  }
+}
