@@ -29,7 +29,7 @@ const { getAll } = require('@manjiltamang/mongoose-util');
 const Lyric = require('./models/Lyric'); // Your mongoose model
 
 app.get('/lyrics', async (req, res) => {
-  const [lyrics, total, size] = await getAll(Lyric, req.params).exec();
+  const [lyrics, total, size] = await getAll(Lyric, req.query).exec();
 
   res.status(200).json({
     status: 'success',
