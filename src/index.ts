@@ -10,11 +10,11 @@ type GetAll<T> = {
 
 /**
  * @param  {Model<T>} model
- * @param  {StringMap} query
+ * @param  {any} query
  */
 export function getAll<T extends Document>(
   model: Model<T>,
-  query: StringMap
+  query: any
 ): GetAll<T> {
   const { limit } = query;
 
