@@ -1,6 +1,6 @@
 ## Project Introduction
 
-Easy lightweight mongoose utilities helper functions.
+Easy lightweight mongoose utility helper functions.
 
 ## Table of Contents
 
@@ -58,14 +58,14 @@ const [lyrics, total, size] = await getAll(Lyric, req.params)
 
 You can add sorting, filters, paginations, field limiting by adding the request params to the request.
 
-| Request Params Fields             | Values                                                                    |
-| --------------------------------- | ------------------------------------------------------------------------- |
-| Filter (Optional)                 | Filter value (Using same field multiple times will result in union query) |
-| page (Optional)                   | Page number (default value is 1)                                          |
-| size (Optional)                   | Size of response list per page (default value is 40)                      |
-| sort (Optional)                   | Sort by i.e. -createAt (Sort by created date in descending order)         |
-| fields (Optional)                 | i.e. name, album, etc. (Fetch provided fields only)                       |
-| Advance filters i.e. ratings[gte] | Filter value                                                              |
+| Request Params Fields                        | Values                                                                    |
+| -------------------------------------------- | ------------------------------------------------------------------------- |
+| Filter (Optional)                            | Filter value (Using same field multiple times will result in union query) |
+| page (Optional)                              | Page number (default value is 1)                                          |
+| size (Optional)                              | Size of response list per page (default value is 40)                      |
+| sort (Optional)                              | Sort by i.e. -createAt (Sort by created date in descending order)         |
+| fields (Optional)                            | i.e. name, album, etc. (Fetch provided fields only)                       |
+| Advance filters i.e. ratings[gte] (Optional) | Filter value                                                              |
 
 ## Contributing guide
 
