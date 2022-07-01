@@ -43,7 +43,7 @@ app.get("/lyrics", async (req, res) => {
 ```
 
 ```
-GET /api/lyrics?artist=jindabaad&page=2&size=30&fields=lyric,artist,album&sort=-releaseYear&ratings[gte]=3&ratings[lte]=5
+GET /api/lyrics?artist=jindabaad&page=2&limit=30&fields=lyric,artist,album&sort=-releaseYear&ratings[gte]=3&ratings[lte]=5
 ```
 
 Above request will fetch second page of lyrics with size `30` per page `jindabaad` as artist name, , selecting only `lyrics, artist and album` attributes and sorted by `release year` in descending order with ratings of `3` to `5`.
@@ -74,14 +74,14 @@ const [lyrics, total, size] = await getAll(Lyric, req.params)
 
 You can add sorting, filters, paginations, field limiting by adding the request params to the request.
 
-| Request Params Fields                        | Values                                                                    |
-| -------------------------------------------- | ------------------------------------------------------------------------- |
-| Filter (Optional)                            | Filter value (Using same field multiple times will result in union query) |
-| page (Optional)                              | Page number (default value is 1)                                          |
-| size (Optional)                              | Size of response list per page (default value is 40)                      |
-| sort (Optional)                              | Sort by i.e. -createAt (Sort by created date in descending order)         |
-| fields (Optional)                            | i.e. name, album, etc. (Fetch provided fields only)                       |
-| Advance filters i.e. ratings[gte] (Optional) | Filter value                                                              |
+| Request Params Fields                               | Values                                                                    |
+| --------------------------------------------------- | ------------------------------------------------------------------------- |
+| Filter (Optional)                                   | Filter value (Using same field multiple times will result in union query) |
+| page (Optional)                                     | Page number (default value is 1)                                          |
+| limit (Optional)                                    | Size of response list per page (default value is 40)                      |
+| sort (Optional)                                     | Sort by i.e. -createAt (Sort by created date in descending order)         |
+| fields (Optional)                                   | i.e. name, album, etc. (Fetch provided fields only)                       |
+| Mongoose operators i.e. [gt], [lt], etc. (Optional) | Operator value                                                            |
 
 ## Contributing guide
 
