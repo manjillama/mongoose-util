@@ -1,6 +1,6 @@
 ## Project Introduction
 
-Easy lightweight mongoose utility helper functions.
+Easy lightweight mongoose utility helper functions to query your entity list.
 
 ## Table of Contents
 
@@ -25,14 +25,14 @@ Build on top of mongoose you can use the helper functions in your Node.js applic
 A basic usage example for fetching a list.
 
 ```javascript
-const { getAll } = require('@manjiltamang/mongoose-util');
-const Lyric = require('./models/Lyric'); // Your mongoose model
+const { getAll } = require("@manjiltamang/mongoose-util");
+const Lyric = require("./models/Lyric"); // Your mongoose model
 
-app.get('/lyrics', async (req, res) => {
+app.get("/lyrics", async (req, res) => {
   const [lyrics, total, size] = await getAll(Lyric, req.query).exec();
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       lyrics,
       total,
@@ -48,11 +48,27 @@ GET /api/lyrics?artist=jindabaad&page=2&size=30&fields=lyric,artist,album&sort=-
 
 Above request will fetch second page of lyrics with size `30` per page `jindabaad` as artist name, , selecting only `lyrics, artist and album` attributes and sorted by `release year` in descending order with ratings of `3` to `5`.
 
-Populate
+**Date Range**
+
+```
+GET /api/songs?artist=jindabaad&releaseYear[gte]=2012-01-01&releaseYear[lte]=2020-10-30
+```
+
+Get all songs from the artist `Jindabaad` that has been released between date `2012-01-01` and `2020-10-30`
+
+**Wildcard**
+
+```
+GET /api/songs?artist[match]=baad
+```
+
+Similar to `LIKE` operator in SQL. The `match` operator will fetch all the songs from artists containing `baad` (case in-sensitive) in their name.
+
+**Populate**
 
 ```javascript
 const [lyrics, total, size] = await getAll(Lyric, req.params)
-  .populate('artist')
+  .populate("artist")
   .exec();
 ```
 

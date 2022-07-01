@@ -1,9 +1,54 @@
-import { Document, Query, EnforceDocument } from 'mongoose';
-import { StringMap } from '../types';
+/* eslint-disable @typescript-eslint/ban-types */
+import { Document, Query, EnforceDocument } from "mongoose";
+import { StringMap } from "../types";
+
+/**
+ *
+ * @param obj
+ * Loop through object properties
+ *    If object has key of 'match' | https://stackoverflow.com/questions/43729199/how-i-can-use-like-operator-on-mongoose
+ *        Replace previous match key with $regex and add '$options=i' property for case-insensitive
+ *    If object has key of 'lte' or 'lt' and is a valid date
+ *        Mutate the value to end of the day.
+ *        i.e. When user searches for a list using a (less than) query for a given date. We're updating the value for the end of the day.
+ */
+function mutateFilters(obj: any) {
+  Object.keys(obj).forEach(function (key) {
+    if (
+      obj[key] !== null &&
+      !Array.isArray(obj[key]) &&
+      typeof obj[key] === "object"
+    )
+      mutateFilters(obj[key]);
+    else {
+      if (key === "match") {
+        obj["$regex"] = Array.isArray(obj[key]) ? obj[key].join("|") : obj[key];
+        obj["$options"] = "i"; // make case-insensitive
+        delete obj[key];
+      }
+    }
+  });
+}
+
+export function parseQueryFilter(queryString: StringMap) {
+  const queryObj = { ...queryString };
+
+  const excludeFields = ["page", "sort", "limit", "fields"];
+  excludeFields.forEach((el) => delete queryObj[el]);
+
+  mutateFilters(queryObj);
+
+  let queryStr: any = JSON.stringify(queryObj);
+  // ADVANCE FILTERING
+  queryStr = JSON.parse(
+    queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match: string) => `$${match}`)
+  );
+
+  return queryStr;
+}
 
 export default class APIFeatures<T extends Document> {
   constructor(
-    // eslint-disable-next-line @typescript-eslint/ban-types
     public query: Query<
       EnforceDocument<T, {}>[],
       EnforceDocument<T, {}>,
@@ -18,16 +63,7 @@ export default class APIFeatures<T extends Document> {
 
   // 1A) FILTERING
   filter(): APIFeatures<T> {
-    const queryObj = { ...this.queryString };
-    const excludeFields = ['page', 'sort', 'limit', 'fields'];
-    excludeFields.forEach((el) => delete queryObj[el]);
-
-    // 1B) ADVANCE FILTERING
-    let queryStr: any = JSON.stringify(queryObj);
-    queryStr = JSON.parse(
-      queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match: string) => `$${match}`)
-    );
-
+    const queryStr = parseQueryFilter(this.queryString);
     this.query.find(queryStr);
     return this;
   }
@@ -35,7 +71,7 @@ export default class APIFeatures<T extends Document> {
   // 2) SORTING
   sort(): APIFeatures<T> {
     if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(',').join('');
+      const sortBy = this.queryString.sort.split(",").join("");
       this.query = this.query.sort(sortBy);
     }
     return this;
@@ -44,11 +80,11 @@ export default class APIFeatures<T extends Document> {
   // 3) FIELD LIMITING
   limitFields(): APIFeatures<T> {
     if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(',').join(' ');
+      const fields = this.queryString.fields.split(",").join(" ");
       this.query = this.query.select(fields);
     } else {
       // exclude the __v field
-      this.query = this.query.select('-__v');
+      this.query = this.query.select("-__v");
     }
     return this;
   }

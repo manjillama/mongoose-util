@@ -1,16 +1,15 @@
-import { Document, Model } from 'mongoose';
-import { StringMap } from './types';
-import { omit } from './utils';
-import APIFeatures from './utils/APIFeatures';
+import { Document, Model } from "mongoose";
+import { StringMap } from "./types";
+import APIFeatures, { parseQueryFilter } from "./utils/APIFeatures";
 
 type GetAll<T> = {
-  populate: (options: string | StringMap) => GetAll<T>;
+  populate: (options: string | StringMap | StringMap[]) => GetAll<T>;
   exec: () => Promise<[T[], number, number]>;
 };
-
 /**
  * @param  {Model<T>} model
- * @param  {any} query
+ * @param  {any} query i.e. { price: { gte: 500, lte: 3000 }, page: 2, size: 30, type: 'clothing', sort: '-price' }
+ * @param {object | string} populate populate query field
  */
 export function getAll<T extends Document>(
   model: Model<T>,
@@ -26,10 +25,10 @@ export function getAll<T extends Document>(
     .limitFields()
     .paginate(size);
 
-  const totalCountFilter = omit(query, ['page', 'sort', 'limit', 'fields']);
+  const totalCountFilter = parseQueryFilter(query);
 
   return {
-    populate(options: string | StringMap) {
+    populate(options: any) {
       features.query.populate(options);
       return this;
     },
